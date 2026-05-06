@@ -1,6 +1,23 @@
 from fastapi import FastAPI
 from router import pokemon
+from database import engine
+import models
 import httpx
+import time
+from sqlalchemy.exc import OperationalError
+
+def create_tables():
+    retries = 5
+    while retries > 0:
+        try:
+            models.Base.metadata.create_all(bind=engine)
+            break
+        except OperationalError:
+            retries -= 1
+            print(f"Esperando a la DB... ({retries} intentos restantes)")
+            time.sleep(3)
+
+create_tables()
 
 app = FastAPI()
 
