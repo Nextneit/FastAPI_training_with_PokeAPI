@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from app.config import settings
+from config import settings
 import httpx
 
 class PokemonService:
@@ -9,8 +9,7 @@ class PokemonService:
 	async def get_pokemon_data(self, name : str):
 		async with httpx.AsyncClient() as client:
 			try:
-				response = await client.get(f"{self.baseUrl}{name.lower()}")
-                
+				response = await client.get(f"{self.baseUrl}/pokemon/{name.lower()}")
 				if response.status_code == 404:
 					raise HTTPException(status_code=404, detail="Pokémon no encontrado en el laboratorio")
                 
